@@ -29,6 +29,10 @@ func TCPServer(address string, port string) {
 	}
 	for {
 		tcpcon, err := listener.AcceptTCP() //TCPConn client
+<<<<<<< HEAD
+=======
+		//fmt.Println("listen success\n")
+>>>>>>> e2db2f5... a file transformission of quic
 		defer tcpcon.Close()
 		if err != nil {
 			log.Fatalf(err.Error())
@@ -66,10 +70,17 @@ func TCPServer(address string, port string) {
 			//接受文件名
 		    filename :=filepath.Base(string(path))
 			fi, err := os.Create(filename)
+<<<<<<< HEAD
 			defer fi.Close()
 			if err != nil {
 				log.Fatalf("file create error")
 			}	
+=======
+			if err != nil {
+				log.Fatalf("file create error")
+			}	
+			defer fi.Close()
+>>>>>>> e2db2f5... a file transformission of quic
 			//接受文件
 			for {
 				datas := make([]byte, 1024)
@@ -86,23 +97,39 @@ func TCPServer(address string, port string) {
 					break
 				}
 			}
+<<<<<<< HEAD
+=======
+		//	fi.Close()
+		//	fi, err = os.Open(filename)
+>>>>>>> e2db2f5... a file transformission of quic
 			fiinfo, err := fi.Stat()
 			recvbyte:=strconv.FormatInt(fiinfo.Size(),10)
 			t := time.Now()
 		    timess := t.Format("2006-01-02 15:04:05")
 	        result=" in this upload :the time is "+timess+" the file name is "+filename+" and receive the "+recvbyte+" bytes\n"
+<<<<<<< HEAD
 			rs.Append(result)	
 			continue;
+=======
+		    rs.Append(result)	
+>>>>>>> e2db2f5... a file transformission of quic
 		} else if(tmp[0]=='2'){
 			//接受文件名
 		    data := make([]byte, 1024)
 			wc, err := tcpcon.Read(data)
 			file:=string(data[0:wc])
 			fi, err := os.Open(file)
+<<<<<<< HEAD
 			defer fi.Close()
 			if err != nil {
 				log.Fatalf("file open error")
 			}
+=======
+			if err != nil {
+				log.Fatalf("file open error")
+			}
+			defer 	fi.Close()
+>>>>>>> e2db2f5... a file transformission of quic
 			//发送文件
 			buff := make([]byte, 1024)
 			for {
@@ -124,8 +151,12 @@ func TCPServer(address string, port string) {
 			t := time.Now()
 		    timess := t.Format("2006-01-02 15:04:05")
 	        result=" in this dowmload :the time is "+timess+" the file name is "+string(data[0:wc])+" and send the "+sendbyte+" bytes\n"
+<<<<<<< HEAD
 			rs.Append(result)
 			continue;
+=======
+		    rs.Append(result)
+>>>>>>> e2db2f5... a file transformission of quic
 		}
 	}
 }

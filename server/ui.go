@@ -101,10 +101,17 @@ func setupUI(){
 		ui.Quit()
 		return true
 	})
+<<<<<<< HEAD
 	//ui.OnShouldQuit(func() bool{
 	//	mainwin.Destroy()
 	//	return true
 	//})
+=======
+	ui.OnShouldQuit(func() bool{
+		mainwin.Destroy()
+		return true
+	})
+>>>>>>> e2db2f5... a file transformission of quic
 	tab := ui.NewTab()
 	mainwin.SetChild(tab)
 	mainwin.SetMargined(true)

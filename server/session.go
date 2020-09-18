@@ -33,7 +33,10 @@ func (h *SessionHandler) Run(){//(chquit chan bool)
 		}
 		streamHandler := NewStreamHandler(&stream)
 		go streamHandler.Run()
+<<<<<<< HEAD
 		continue
 		//time.Sleep(1000*time.Second)
+=======
+>>>>>>> e2db2f5... a file transformission of quic
 	}
 }

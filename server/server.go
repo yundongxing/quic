@@ -48,7 +48,10 @@ func (s *FileServer) Run() error {
 		} 
 		sessionHandler :=NewSessionHandler(&sess)
 		go sessionHandler.Run()
+<<<<<<< HEAD
 		continue
+=======
+>>>>>>> e2db2f5... a file transformission of quic
 	//	time.Sleep(time.Second*120)
 	}
 }

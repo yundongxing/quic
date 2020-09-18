@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"os"
+<<<<<<< HEAD
 	"strings"
 
 	//	"path/filepath"
@@ -15,6 +16,12 @@ import (
 	"strconv"
 	"time"
 
+=======
+//	"path/filepath"
+//    "fmt"
+	"time"
+	"strconv" 
+>>>>>>> e2db2f5... a file transformission of quic
 	quic "github.com/lucas-clemente/quic-go"
 )
 
@@ -22,19 +29,29 @@ type FileClient struct {
 	Session quic.Session
 	Ctx     context.Context
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e2db2f5... a file transformission of quic
 // 创建文件对象
 func NewFileClient(address string) *FileClient {
 	tlsConf := &tls.Config{
 		InsecureSkipVerify: true,
+<<<<<<< HEAD
 		NextProtos:         []string{"quic-echo-example"},
 	}
 	session, err := quic.DialAddr(address, tlsConf, nil)
+=======
+		NextProtos:[]string{"quic-echo-example"},
+	}
+	session, err := quic.DialAddr(address,tlsConf,nil)
+>>>>>>> e2db2f5... a file transformission of quic
 	if err != nil {
 		log.Fatalf("connect server error: %v\n", err)
 	}
 	return &FileClient{
 		Session: session,
+<<<<<<< HEAD
 		Ctx:     context.Background(),
 	}
 }
@@ -69,6 +86,19 @@ var fileChunk = 1024 * 1024 * 50
 func (c *FileClient) Upload(file string, quit chan int) {
 	fileReader, size := ReadFile(file)
 	defer fileReader.Close()
+=======
+		Ctx:    context.Background(),
+	}
+}
+// 关闭会话
+func (c *FileClient) Close() {
+	time.Sleep(time.Second)
+	//c.Session.Close()
+	time.Sleep(time.Second)
+}
+// 上传文件
+func (c *FileClient) Upload(file string,quit chan int)  {
+>>>>>>> e2db2f5... a file transformission of quic
 	stream, err := c.Session.OpenStreamSync(c.Ctx)
 	if err != nil {
 		log.Fatalf("open stream error: %v\n", err)
@@ -76,7 +106,11 @@ func (c *FileClient) Upload(file string, quit chan int) {
 	defer stream.Close()
 	t := time.Now()
 	times := t.Format("2006-01-02 15:04:05")
+<<<<<<< HEAD
 	result := " in this upload :the start time is " + times + " the file name is " + file + "\n"
+=======
+	result:=" in this upload :the start time is "+times+" the file name is "+file+"\n"
+>>>>>>> e2db2f5... a file transformission of quic
 	urs.Append(result)
 	writer := bufio.NewWriter(stream)
 	err = writer.WriteByte(byte(1))
@@ -99,6 +133,11 @@ func (c *FileClient) Upload(file string, quit chan int) {
 	if writen != len(file) {
 		log.Fatalf("writen !=filename , %d, %d", writen, len(file))
 	}
+<<<<<<< HEAD
+=======
+	fileReader, size := ReadFile(file)
+	defer fileReader.Close()
+>>>>>>> e2db2f5... a file transformission of quic
 	dataLenBytes := make([]byte, 8, 8)
 	binary.BigEndian.PutUint64(dataLenBytes, size)
 	writen, err = writer.Write(dataLenBytes)
@@ -108,6 +147,7 @@ func (c *FileClient) Upload(file string, quit chan int) {
 	if writen != 8 {
 		log.Fatalf("file len != 8")
 	}
+<<<<<<< HEAD
 	if int(size) < fileChunk {
 		writeFileN, err := writer.ReadFrom(fileReader)
 		if err != nil {
@@ -215,6 +255,32 @@ func (c *FileClient) ChunkUploaddata(file string, i int, size int, concent []byt
 	}
 }
 
+=======
+	writeFileN, err := writer.ReadFrom(fileReader)
+	if err != nil {
+		log.Fatalf("write data error: %v", err)
+	}
+	if uint64(writeFileN) != size {
+		log.Fatalf("write file n != file size")
+	}
+	err = writer.Flush()
+	if err != nil {
+		log.Fatalf("writer flush error: %v", err)
+	}
+	sendbyte:= strconv.FormatInt(writeFileN,10)
+	tt := time.Now()
+	//timess:=tt.UTC().Format(time.UnixDate)
+	timess := tt.Format("2006-01-02 15:04:05")
+	result=" in this upload :the end time is "+timess+" the file name is "+file+"\n"
+	urs.Append(result)
+	tsecond :=t.Unix()
+	ttsecond :=tt.Unix()
+    sub :=strconv.FormatInt(ttsecond-tsecond,10)
+	result=" in this upload :the time is "+sub+" the file name is "+file+"and send the "+sendbyte+" bytes\n"
+	urs.Append(result)
+	quit<-1
+}
+>>>>>>> e2db2f5... a file transformission of quic
 // 读取文件
 func ReadFile(file string) (*os.File, uint64) {
 	fp, err := os.Open(file)
@@ -227,9 +293,14 @@ func ReadFile(file string) (*os.File, uint64) {
 	}
 	return fp, uint64(fileInfo.Size())
 }
+<<<<<<< HEAD
 
 // 下载文件
 func (c *FileClient) Download(file string, quit chan int) {
+=======
+// 下载文件
+func (c *FileClient) Download(file string,quit chan int )  {
+>>>>>>> e2db2f5... a file transformission of quic
 	stream, err := c.Session.OpenStreamSync(c.Ctx)
 	if err != nil {
 		log.Fatalf("open stream error: %v", err)
@@ -238,7 +309,11 @@ func (c *FileClient) Download(file string, quit chan int) {
 	t := time.Now()
 	//times:=t.UTC().Format(time.UnixDate)
 	times := t.Format("2006-01-02 15:04:05")
+<<<<<<< HEAD
 	result := " in this download :the start time is " + times + " the file name is " + file + "\n"
+=======
+	result:=" in this download :the start time is "+times+" the file name is "+file+"\n"
+>>>>>>> e2db2f5... a file transformission of quic
 	drs.Append(result)
 	writer := bufio.NewWriter(stream)
 	err = writer.WriteByte(byte(2))
@@ -265,6 +340,7 @@ func (c *FileClient) Download(file string, quit chan int) {
 	if err != nil {
 		log.Fatalf("writer flush error: %v", err)
 	}
+<<<<<<< HEAD
 	filelens := make([]byte, 8, 8)
 	reader := bufio.NewReader(stream)
 	reader.Read(filelens)
@@ -424,4 +500,34 @@ func (c *FileClient) ChunkDownloaddata(file string, size uint64, i int, datalen 
 			}
 		}
 	}
+=======
+	if err != nil {
+		log.Fatalf("get tmp abs path error: %v", err)
+	}
+	if err != nil {
+		log.Fatalf("get abs path error: %v", err)
+	}
+	tmpFile, err := os.Create(file)
+	defer tmpFile.Close()
+	if err != nil {
+		log.Fatalf("creat file error: %v", err)
+	}
+	recvN, err := io.Copy(tmpFile,stream)
+	if err != nil {
+		log.Fatalf("write file error: %v", err)
+	}
+	recvbyte:=strconv.FormatInt(recvN,10)
+	tt := time.Now()
+	//timess:=tt.UTC().Format(time.UnixDate)
+	timess := t.Format("2006-01-02 15:04:05")
+	result =" in this download :the end time is "+timess+" the file name is "+file+"\n"
+	drs.Append(result)
+	tsecond :=t.Unix()
+	ttsecond :=tt.Unix()
+	sub :=strconv.FormatInt(ttsecond-tsecond,10)
+	//timess := t.Format("2006-01-02 15:04:05")
+	result=" in this download :the time is "+sub+" the file name is "+file+" and receive the "+recvbyte+" bytes\n"
+	drs.Append(result)
+	quit<-1
+>>>>>>> e2db2f5... a file transformission of quic
 }

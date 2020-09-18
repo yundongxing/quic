@@ -3,15 +3,20 @@ package main
 import (
 	"context"
 	"encoding/binary"
+<<<<<<< HEAD
 	"math"
     "strings"
 	//	"errors"
 	"bufio"
+=======
+//	"errors"
+>>>>>>> e2db2f5... a file transformission of quic
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strconv"
+<<<<<<< HEAD
     "time"
 	//	"github.com/873314461/quic-file/common"
 	"github.com/lucas-clemente/quic-go"
@@ -37,13 +42,22 @@ func Newfiledir(filename string, size uint64) filedir {
 	}
 }
 
+=======
+//	"github.com/873314461/quic-file/common"
+	"github.com/lucas-clemente/quic-go"
+)
+
+>>>>>>> e2db2f5... a file transformission of quic
 type StreamHandler struct {
 	Ctx    context.Context
 	Stream quic.Stream
 	Reader io.Reader
 	Writer io.Writer
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e2db2f5... a file transformission of quic
 // 创建流对象
 func NewStreamHandler(stream *quic.Stream) *StreamHandler {
 	return &StreamHandler{
@@ -53,7 +67,10 @@ func NewStreamHandler(stream *quic.Stream) *StreamHandler {
 		Ctx:    context.Background(),
 	}
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e2db2f5... a file transformission of quic
 // 流程序控制
 func (h *StreamHandler) Run() {
 	defer h.Stream.Close()
@@ -67,6 +84,7 @@ func (h *StreamHandler) Run() {
 		log.Fatalf("read byte len != 1")
 		return
 	}
+<<<<<<< HEAD
 	ops := int(tmp[0])
 	result := " quic listen success\n"
 	rs.Append(result)
@@ -95,6 +113,39 @@ func (h *StreamHandler) Run() {
 
 // 文件上传
 func (h *StreamHandler) handlerUpload() {
+=======
+	op := uint8(tmp[0])
+	result:=" quic listen success\n"
+	rs.Append(result)
+	if(op==1){
+		h.handlerUpload()
+	}else if(op==2){
+		h.handlerDownload()
+	}
+	/*
+	switch op {
+	case 1:
+		log.Fatalf("upload op: %d", op)
+		//err := h.handlerUpload()
+		h.handlerUpload()
+		if err != nil {
+			log.Fatalf("handler upload error: %v", err)
+		}
+	case 2:
+		log.Fatalf("download op: %d", op)
+		//err := h.handlerDownload()
+		h.handlerDownload()
+		if err != nil {
+			log.Fatalf("handler download error: %v", err)
+		}
+	default:
+		log.Fatalf("unknow op: %d", op)
+	}
+	*/
+}
+// 文件上传
+func (h *StreamHandler) handlerUpload()  {
+>>>>>>> e2db2f5... a file transformission of quic
 	lenBytes := make([]byte, 2, 2)
 	readn, err := h.Reader.Read(lenBytes)
 	if err != nil {
@@ -112,8 +163,13 @@ func (h *StreamHandler) handlerUpload() {
 	if readn != int(pathLen) {
 		log.Fatalf("readn != filename len")
 	}
+<<<<<<< HEAD
 	filename := filepath.Base(string(path))
 	tmpAbsPath, err := filepath.Abs(filename + TempFileSuffix)
+=======
+	filename:=filepath.Base(string(path))
+	tmpAbsPath, err := filepath.Abs(filename +TempFileSuffix)
+>>>>>>> e2db2f5... a file transformission of quic
 	if err != nil {
 		log.Fatalf("get tmp abs path error: %v", err)
 	}
@@ -129,6 +185,7 @@ func (h *StreamHandler) handlerUpload() {
 	if readn != 8 {
 		log.Fatalf("readn != 8")
 	}
+<<<<<<< HEAD
 	size := binary.BigEndian.Uint64(dataLenBytes)
 	if int(size)<fileChunk {
 		file, err := os.Create(tmpAbsPath)
@@ -276,6 +333,29 @@ func (h *StreamHandler) ChunkUploaddata() {
 	
 }
 
+=======
+	dataLen := binary.BigEndian.Uint64(dataLenBytes)
+	file, err := os.Create(tmpAbsPath)
+	if err != nil {
+		log.Fatalf("creat file error: %v", err)
+	}
+	writen, err := io.Copy(file, h.Reader)
+	if err != nil {
+		log.Fatalf("write file error: %v", err)
+	}
+	if dataLen != uint64(writen) {
+		log.Fatalf("data len != writen")
+	}
+	file.Close()
+	err = os.Rename(tmpAbsPath, absPath)
+	if err != nil {
+		log.Fatalf("rename file error: %v", err)
+	}
+	writebyte:= strconv.FormatInt(writen,10)
+	result:=" in this upload :the file name is "+filename+" and receive the "+writebyte+" bytes\n"
+	rs.Append(result)
+}
+>>>>>>> e2db2f5... a file transformission of quic
 //文件下载
 func (h *StreamHandler) handlerDownload() {
 	lenBytes := make([]byte, 2, 2)
@@ -304,6 +384,7 @@ func (h *StreamHandler) handlerDownload() {
 	if err != nil {
 		log.Fatalf("get file[%s] info error: %v", string(path), err)
 	}
+<<<<<<< HEAD
 	filelens := make([]byte, 8, 8)
 	size := uint64(fileInfo.Size())
 	binary.BigEndian.PutUint64(filelens, size)
@@ -397,4 +478,16 @@ func (h *StreamHandler) ChunkDownloaddata() {
 		result := " in this upload :the end time is " + timess + " the file name is " + filename + "\n"
 		rs.Append(result)
 	}
+=======
+	sendN, err := io.Copy(h.Writer, file)
+	if err != nil {
+		log.Fatalf("send file[%s] error: %v", string(path), err)
+	}
+	if sendN != fileInfo.Size() {
+		log.Fatalf("sendn != file size")
+	}
+	sendbyte:= strconv.FormatInt(sendN,10)
+	result :=" in this download : the file name is "+string(path)+" and send the "+sendbyte+" bytes\n"
+	rs.Append(result)
+>>>>>>> e2db2f5... a file transformission of quic
 }

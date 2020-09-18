@@ -6,7 +6,10 @@ import (
 	"io/ioutil"
 //	"path/filepath"
 	"strings"
+<<<<<<< HEAD
 
+=======
+>>>>>>> e2db2f5... a file transformission of quic
 )
 
 var files []string //传输文件列表
@@ -105,6 +108,7 @@ func makeUploadPage() ui.Control{
 			count:=len(files)
 			chquit := make( chan int,count)
 			for _,file :=range files{
+<<<<<<< HEAD
 				//fileReader, size := ReadFile(file)
 	           // defer fileReader.Close()
 				//if size<1024*1024*1 {
@@ -114,6 +118,10 @@ func makeUploadPage() ui.Control{
 				//}	   
 			}
 			/*
+=======
+				go c.Upload(file,chquit)
+			}
+>>>>>>> e2db2f5... a file transformission of quic
 			go func(){
 				for range(chquit){
 					<-chquit
@@ -124,11 +132,18 @@ func makeUploadPage() ui.Control{
 					}
 				}
 			}()
+<<<<<<< HEAD
 			*/
 		} else {
 			//for _,file :=range files{
 				go TCPClient(address,files,true)
 			//}		
+=======
+		} else {
+			for _,file :=range files{
+				go TCPClient(address,file,true)
+			}		
+>>>>>>> e2db2f5... a file transformission of quic
 		}
 	})
     // 清空按钮
@@ -183,6 +198,7 @@ func makeDownloadPage() ui.Control{
 			chquit := make( chan int,count)
 			for _,file :=range files{
 				if(file!=""){
+<<<<<<< HEAD
 					//fileReader, size := ReadFile(file)
 	            	//defer fileReader.Close()
 				//	if size<1024*1024*1{
@@ -193,6 +209,11 @@ func makeDownloadPage() ui.Control{
 					//go c.Download(file,chquit)
 			}	
 			/*
+=======
+					go c.Download(file,chquit)
+				}
+			}	
+>>>>>>> e2db2f5... a file transformission of quic
 			go func(){
 				for range(chquit){
 					<-chquit
@@ -202,6 +223,7 @@ func makeDownloadPage() ui.Control{
 					   c.Close()
 					}
 				}
+<<<<<<< HEAD
 			}()*/
 		} else {
 			filee:=uentry.Text()
@@ -209,6 +231,15 @@ func makeDownloadPage() ui.Control{
 			//for _,file :=range files{
 			go TCPClient(address,files,false)
 			//}		
+=======
+			}()
+		} else {
+			filee:=uentry.Text()
+			files=strings.Split(filee,",")
+			for _,file :=range files{
+				go TCPClient(address,file,false)
+			}		
+>>>>>>> e2db2f5... a file transformission of quic
 		}
 	})
 	// 清空按钮
@@ -256,4 +287,7 @@ func setupUI(){
 func main(){
 	ui.Main(setupUI)
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e2db2f5... a file transformission of quic
